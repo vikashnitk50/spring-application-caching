@@ -83,13 +83,13 @@
     </beans:property>
   </beans:bean>
 
-  <beans:bean id="cacheService" class="com.application.caching.cache.SpringEHCacheManager">
+  <beans:bean id="cacheService" class="com.application.caching.cache.EhCacheServiceImpl">
     <beans:property  name="cache" ref ="methodCache">
     </beans:property>
   </beans:bean>
 
 
-  <beans:bean id="ehcacheMethodCacheInterceptor" class="com.application.caching.cache.SpringEHCacheMethodCacheInterceptor">
+  <beans:bean id="ehcacheMethodCacheInterceptor" class="com.application.caching.cache.EhCacheMethodInterceptor">
     <beans:property  name="cache" ref ="methodCache"> </beans:property>
   </beans:bean>
   
@@ -100,7 +100,7 @@
     </beans:constructor-arg>
   </beans:bean>
   
-  <beans:bean id="mapMethodCacheInterceptor" class="com.application.caching.cache.SpringMapMethodCacheInterceptor">
+  <beans:bean id="mapMethodCacheInterceptor" class="com.application.caching.cache.HashMapMethodInterceptor">
     <beans:property  name="cache" ref ="mapCache"> </beans:property>
   </beans:bean>
 
@@ -118,6 +118,6 @@
     </beans:property>
   </beans:bean>
 
-
+  <!-- ============================== CACHE ============================= -->
 
 </beans:beans>

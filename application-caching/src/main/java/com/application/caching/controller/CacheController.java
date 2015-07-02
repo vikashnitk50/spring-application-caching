@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.application.caching.cache.CacheService;
 
+/**
+ * 
+ * @author vsinha
+ * @version 1.0
+ * @date 06-July-2015
+ */
 @Controller
 public class CacheController {
 
@@ -33,7 +39,7 @@ public class CacheController {
     return "cache";
   }
 
-  @RequestMapping("/clear")
+  @RequestMapping("/clearAll")
   public String clearAll() {
     this.cacheService.removeAll();
     return "cache";

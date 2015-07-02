@@ -9,10 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * This class intercepts method invocation and checks for MethodCache annotation. If this annotation is
+ * specified for this method, then it will cache the results.
  * 
  * @author vsinha
  * @version 1.0
- * @date 01-July-2015
+ * @date 03-July-2015
  * 
  */
 public abstract class AbstractMethodCacheInterceptor implements MethodInterceptor {
@@ -36,40 +38,48 @@ public abstract class AbstractMethodCacheInterceptor implements MethodIntercepto
         + invocation.getArguments());
     Object result = null;
     MethodCache methodCacheAnnotation = invocation.getMethod().getAnnotation(MethodCache.class);
-    if (methodCacheAnnotation != null) {
-      // String targetName = invocation.getThis().getClass().getName();
-      String targetName = invocation.getThis().toString();
-      String methodName = invocation.getMethod().getName();
-      Object[] arguments = invocation.getArguments();
-      String cacheKey = getCacheKey(targetName, methodName, arguments);
-      result = get(cacheKey);
-      if (result == null) {
-        logger.info("[MethodCache] Data not found in cache for cacheKey: " + cacheKey);
-        result = invocation.proceed();
-        // Add result to the Cache
-        put(result, methodCacheAnnotation.cacheNullResult(), cacheKey);
-      } else {
-        logger.info("[MethodCache] Data found in cache for cacheKey: " + cacheKey);
-      }
-
-    } else if (invocation.getMethod().getAnnotation(InvalidateMethodCache.class) != null) {
+    if (methodCacheAnnotation != null) {// Results are cacheble, so cache the method result if there is no
+                                        // record found in local cache
+      result = cacheMethodResultIfAbsent(invocation, methodCacheAnnotation);
+    } else if (invocation.getMethod().getAnnotation(InvalidateMethodCache.class) != null) {// Evict the cache
       // String targetName = invocation.getThis().getClass().getName() + ".";
-      String targetName = invocation.getThis().toString() + ".";
-      remove(targetName);
-      result = invocation.proceed();
-    } else {
-      // Results are not cacheble, so proceed with normal invocation
+      result = evictMethodResult(invocation);
+    } else {// Results are not cacheble, so proceed with normal invocation
       result = invocation.proceed();
     }
     logger.info("method " + invocation.getMethod() + " returns " + result);
     return result;
   }
 
-  public abstract Object get(String cacheKey);
+  private Object cacheMethodResultIfAbsent(MethodInvocation invocation, MethodCache methodCacheAnnotation)
+      throws Throwable {
+    // String targetName = invocation.getThis().getClass().getName();
+    String targetName = invocation.getThis().toString();
+    String methodName = invocation.getMethod().getName();
+    Object[] arguments = invocation.getArguments();
+    // In case of Tenant,String tenantId=null;
+    String cacheKey = getCacheKey(targetName, methodName, arguments);
+    Object result = get(cacheKey);
+    if (result == null) {
+      logger.info("[MethodCache] Data not found in cache for cacheKey: " + cacheKey);
+      result = invocation.proceed();
+      // Add result to the Cache
+      if (result != null || methodCacheAnnotation.cacheNullResult()) {
+        put(cacheKey, result);
+      }
+    } else {
+      logger.info("[MethodCache] Data found in cache for cacheKey: " + cacheKey);
+    }
+    return result;
+  }
 
-  public abstract void remove(String targetName);
-
-  public abstract void put(Object result, boolean cacheNullResult, String cacheKey);
+  private Object evictMethodResult(MethodInvocation invocation) throws Throwable {
+    // String targetName = invocation.getThis().getClass().getName() + ".";
+    String targetName = invocation.getThis().toString() + ".";
+    remove(targetName);
+    Object result = invocation.proceed();
+    return result;
+  }
 
   /**
    * creates cache key: targetName.methodName.argument0.argument1...
@@ -96,5 +106,11 @@ public abstract class AbstractMethodCacheInterceptor implements MethodIntercepto
     }
     return sb.toString();
   }
+
+  public abstract Object get(String cacheKey);
+
+  public abstract void put(String cacheKey, Object result);
+
+  public abstract void remove(String targetName);
 
 }

@@ -20,7 +20,7 @@ public interface CacheService {
   public List getKeys();
 
   /**
-   * TODO: Not tested This method removes cached object with specified key.
+   * This method removes cached object with specified key.
    * 
    * @param key
    *          the key
@@ -28,13 +28,12 @@ public interface CacheService {
   public void remove(String key);
 
   /**
-   * TODO: Not tested This method removes all cached objects.
+   * This method removes all cached objects.
    */
   public void removeAll();
 
   /**
-   * TODO: Not tested This method remove cached objects with keys starting with specified keyStartsWith
-   * parameter.
+   * This method remove cached objects with keys starting with specified keyStartsWith parameter.
    * 
    * @param keyStartsWith
    *          the key starts with
