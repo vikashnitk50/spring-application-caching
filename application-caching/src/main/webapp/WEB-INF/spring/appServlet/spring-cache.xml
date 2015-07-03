@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:beans="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+
+
+  <!-- ============================== CACHE ============================= -->
+
+
+  <beans:bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+  </beans:bean>
+
+  <beans:bean id="methodCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <beans:property  name="cacheManager" ref ="ehCacheManager">
+   </beans:property>
+    <beans:property  name="cacheName">
+      <beans:value>com.application.caching.METHOD_CACHE</beans:value>
+    </beans:property>
+   <beans:property  name="overflowToDisk">
+      <beans:value>false</beans:value>
+    </beans:property>
+    <beans:property  name="timeToLive">
+      <beans:value>3600</beans:value>
+    </beans:property>
+    <beans:property  name="timeToIdle">
+      <beans:value>3600</beans:value>
+    </beans:property>
+  </beans:bean>
+ 
+ <beans:bean id="mapCache" class ="java.util.HashMap">
+   <beans:constructor-arg>
+        <beans:map key-type="java.lang.String" value-type="java.lang.Object">
+        </beans:map>
+    </beans:constructor-arg>
+  </beans:bean>
+  
+  <beans:bean id="LruCache" class ="org.apache.commons.collections.map.LRUMap">
+   <beans:constructor-arg type="int" value="1000"></beans:constructor-arg>
+  </beans:bean>
+  
+  <beans:bean id="ehcacheService" class="com.application.caching.cache.service.impl.EhCacheServiceImpl">
+    <beans:property  name="cache" ref ="methodCache">
+    </beans:property>
+  </beans:bean>
+  
+  
+   <beans:bean id="mapService" class="com.application.caching.cache.service.impl.JavaMapCacheServiceImpl">
+    <beans:property  name="cache" ref ="mapCache">
+    </beans:property>
+  </beans:bean>
+  
+  
+    <beans:bean id="lruService" class="com.application.caching.cache.service.impl.LRUMapCacheServiceImpl">
+    <beans:property  name="cache" ref ="LruCache">
+    </beans:property>
+  </beans:bean>
+  
+
+
+  <beans:bean id="ehcacheMethodCacheInterceptor" class="com.application.caching.interceptor.ApplicationCacheMethodInterceptor">
+    <beans:property  name="cacheService" ref ="ehcacheService"> </beans:property>
+  </beans:bean>
+  
+
+  <beans:bean name="methodCacheAutoProxy" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+    <beans:property  name="beanNames">
+      <!-- List of services whose method results that needs to be cached -->
+      <beans:value>
+        personService
+      </beans:value>
+    </beans:property>
+    <beans:property name="interceptorNames">
+      <beans:list>
+        <beans:value>ehcacheMethodCacheInterceptor</beans:value>
+      </beans:list>
+    </beans:property>
+  </beans:bean>
+
+  <!-- ============================== CACHE ============================= -->
+
+</beans:beans>

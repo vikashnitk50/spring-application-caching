@@ -1,6 +1,5 @@
-package com.application.caching.cache;
+package com.application.caching.cache.service;
 
-import java.util.List;
 
 public interface CacheService {
 
@@ -10,14 +9,6 @@ public interface CacheService {
    * @return the number of records
    */
   public Integer getCount();
-
-  /**
-   * Gets the keys.
-   * 
-   * @return keys of cached objects
-   */
-  @SuppressWarnings("rawtypes")
-  public List getKeys();
 
   /**
    * This method removes cached object with specified key.
@@ -31,6 +22,10 @@ public interface CacheService {
    * This method removes all cached objects.
    */
   public void removeAll();
+
+  public Object getCacheValue(String cacheKey);
+
+  public void addToCache(String cacheKey, Object result);
 
   /**
    * This method remove cached objects with keys starting with specified keyStartsWith parameter.

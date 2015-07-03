@@ -1,4 +1,4 @@
-package com.application.caching.cache;
+package com.application.caching.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

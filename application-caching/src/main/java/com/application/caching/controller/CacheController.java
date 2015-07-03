@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.application.caching.cache.CacheService;
+import com.application.caching.cache.service.CacheService;
 
 /**
  * 
@@ -22,27 +22,27 @@ public class CacheController {
   private CacheService cacheService;
 
   @Autowired(required = true)
-  @Qualifier(value = "cacheService")
+  @Qualifier(value = "ehcacheService")
   public void setCacheService(CacheService cacheService) {
     this.cacheService = cacheService;
   }
 
-  @RequestMapping(value = "/cache-service", method = RequestMethod.GET)
+  @RequestMapping(value = "/cache", method = RequestMethod.GET)
   public String getCacheCount(Model model) {
     model.addAttribute("cacheCount", this.cacheService.getCount());
     return "cache";
   }
 
-  @RequestMapping("/clear/{targetName}")
+  @RequestMapping("/cache/{targetName}")
   public String clearCacheByTargetName(@PathVariable("targetName") String targetName) {
     this.cacheService.removeKeysStartsWith(targetName);
-    return "cache";
+    return "redirect:/cache";
   }
 
   @RequestMapping("/clearAll")
   public String clearAll() {
     this.cacheService.removeAll();
-    return "cache";
+    return "redirect:/cache";
   }
 
 }

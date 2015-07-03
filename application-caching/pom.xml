@@ -57,6 +57,12 @@
       <artifactId>commons-dbcp</artifactId>
       <version>1.4</version>
     </dependency>
+    <!-- Apache Commons Collection -->
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2.1</version>
+    </dependency>
     <!-- Spring ORM -->
     <dependency>
       <groupId>org.springframework</groupId>

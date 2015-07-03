@@ -2,8 +2,8 @@ package com.application.caching.service;
 
 import java.util.List;
 
-import com.application.caching.cache.InvalidateMethodCache;
-import com.application.caching.cache.MethodCache;
+import com.application.caching.annotation.InvalidateMethodCache;
+import com.application.caching.annotation.MethodCache;
 import com.application.caching.model.Person;
 
 public interface PersonService {
