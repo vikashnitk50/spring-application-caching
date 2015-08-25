@@ -1,5 +1,6 @@
 # spring-application-caching
-Caching the result of a method using spring/java for an application.
+
+**Caching the result of a method using spring/java for an application.**
 
 Let me give you a little background about this project. i have created a custion annonation to cache/invalidate method result.
 
