@@ -14,19 +14,20 @@ Let me give you a little background about this project. i have created a custion
 We can integrate this controller with UI and allow admin user to clear the Cache(Load the fresh data from the DB)
 
 **For example:**
-public class CountryService {
 
-  @MethodCache
+    public class CountryService {
+
+        @MethodCache
  
-  public List<Country> getCountries();
+        public List<Country> getCountries();
  
 
-  @MethodCache
+        @MethodCache
  
-  public Country getCountryById(int countryId);
+        public Country getCountryById(int countryId);
 
-  @InvalidateMethodCache
+        @InvalidateMethodCache
  
-  public Country deleteCountryByID(int countryId);
+        public Country deleteCountryByID(int countryId);
 
-}
+      }
