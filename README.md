@@ -8,5 +8,5 @@ Let me give you a little background about this project. i have created a custion
 
 @InvalidateMethodCache: It will clear the result of a method.
 
-ApplicationCacheMethodInterceptor: This class intercepts method invocation and checks for MethodCache annotation. If this annotation is specified for this method, then it will cache the results.
+*ApplicationCacheMethodInterceptor:* This class intercepts method invocation and checks for MethodCache annotation. If this annotation is specified for this method, then it will cache the results.
 
