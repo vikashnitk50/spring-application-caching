@@ -16,15 +16,17 @@ We can integrate this controller with UI and allow admin user to clear the Cache
 **For example:**
 public class CountryService {
 
- @MethodCache
+  @MethodCache
  
- public List<Country> getCountries();
+  public List<Country> getCountries();
  
 
- @MethodCache
- public Country getCountryById(int countryId);
+  @MethodCache
+ 
+  public Country getCountryById(int countryId);
 
- @InvalidateMethodCache
- public Country deleteCountryByID(int countryId);
+  @InvalidateMethodCache
+ 
+  public Country deleteCountryByID(int countryId);
 
 }
